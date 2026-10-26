@@ -1,5 +1,6 @@
 import mongoose from "mongoose";
 import validator from "validator"
+import bcrypt from "bcryptjs"
 
 const userSchema = mongoose.Schema(
     {
@@ -33,6 +34,16 @@ const userSchema = mongoose.Schema(
     },
     {timestams: true}
 )
+userSchema.pre('saved', async function(next){
+    const salt = await bcrypt.genSalt();
+    this.password = await bcrypt.hash(this.password, salt);
+    next();
+})
+
+userSchema.post('saved', function(doc, next){
+    console.log('new user created & saved', doc)
+    next();
+})
 
 const User = mongoose.model("User", userSchema);
 
