@@ -1,6 +1,10 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 function SignupPage() {
+
+  const navigate = useNavigate();
+
   const [form, setForm] = useState({
     name: "",
     department: "",
@@ -40,6 +44,7 @@ function SignupPage() {
         setpasswordErrors(data.password || "")
         setError(data.message || "")
       }
+      navigate('/dashboard')
     } catch (err) {
       //throw new Error("Signup failed");
       setError(err.message);

@@ -5,6 +5,14 @@ const handleErrors = (err) => {
     console.log(err.message, err.code)
     let errors = {email: '', password: ''};
 
+    //incorrect email
+    if(err.message === "Incorrect email"){
+        errors.email = "that is not registered";
+    }
+    //incorrect email
+    if(err.message === "Incorrect password"){
+        errors.password = "that password is incorrect";
+    }
     //duplicate errors
     if(err.code === 11000){
         errors.email = "Email already exist";
@@ -26,15 +34,15 @@ const createToken = (id) => {
     });
 }
 
-export async function signup_get(req,res,next) {
+export async function signup_get(req,res) {
     res.send('signup')
 }
 
-export async function login_get(req,res,next) {
+export async function login_get(req,res) {
     res.send('login')
 }
 
-export async function signup_post(req,res,next) {
+export async function signup_post(req,res) {
     const {name, email, department, role, password} = req.body;
 
     try {
@@ -54,6 +62,15 @@ export async function signup_post(req,res,next) {
     }
 }
 
-export async function login_post(req,res,next) {
-    res.send('new signup')
+export async function login_post(req,res) {
+    const {email, password} = req.body;
+    try {
+        const user = await User.login(email, password);
+        const token = createToken(user._id);
+        res.cookie('jwt', token, { httpOnly: true, maxAge: maxAge * 1000})
+        res.status(200).json({user: user._id})
+    } catch (error) {
+        const errors = handleErrors(error);
+        res.status(400).json(errors)
+    }
 }
