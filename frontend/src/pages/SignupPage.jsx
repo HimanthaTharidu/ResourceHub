@@ -2,7 +2,6 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 function SignupPage() {
-
   const navigate = useNavigate();
 
   const [form, setForm] = useState({
@@ -13,8 +12,8 @@ function SignupPage() {
   });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-  const [emailErrors, setEmailErrors] = useState("")
-  const [passwordErrors, setpasswordErrors] = useState("")
+  const [emailErrors, setEmailErrors] = useState("");
+  const [passwordErrors, setpasswordErrors] = useState("");
 
   function handleChange(e) {
     const { name, value } = e.target;
@@ -24,6 +23,8 @@ function SignupPage() {
   async function handleSubmit(e) {
     e.preventDefault();
     setLoading(true);
+    setEmailErrors("");
+    setpasswordErrors("");
 
     try {
       const response = await fetch(
@@ -40,11 +41,12 @@ function SignupPage() {
       const data = await response.json();
       //console.log(data.email)
       if (!response.ok) {
-        setEmailErrors(data.email || "")
-        setpasswordErrors(data.password || "")
-        setError(data.message || "")
+        setEmailErrors(data.email || "");
+        setpasswordErrors(data.password || "");
+        setError(data.message || "");
+        return;
       }
-      navigate('/dashboard')
+      navigate("/dashboard");
     } catch (err) {
       //throw new Error("Signup failed");
       setError(err.message);
@@ -80,7 +82,11 @@ function SignupPage() {
           onChange={handleChange}
           required
         />
-        {emailErrors && <p role="alert" className="email error">{emailErrors}</p>}
+        {emailErrors && (
+          <p role="alert" className="email error">
+            {emailErrors}
+          </p>
+        )}
         <label>Password</label>
         <input
           name="password"
@@ -89,7 +95,11 @@ function SignupPage() {
           onChange={handleChange}
           required
         />
-        {passwordErrors && <p role="alert" className="password error">{passwordErrors}</p>}
+        {passwordErrors && (
+          <p role="alert" className="password error">
+            {passwordErrors}
+          </p>
+        )}
         <button>Sign up</button>
         {error && <div className="error">{error}</div>}
       </form>

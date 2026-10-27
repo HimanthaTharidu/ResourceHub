@@ -51,14 +51,13 @@ export async function login_get(req, res) {
 }
 
 export async function signup_post(req, res) {
-  const { name, email, department, role, password } = req.body;
+  const { name, email, department,password } = req.body;
 
   try {
     const user = await User.create({
       name,
       email,
       department,
-      role,
       password,
     });
     const token = createToken(user._id);
@@ -75,12 +74,17 @@ export async function login_post(req, res) {
   try {
     const user = await User.login(email, password);
     const token = createToken(user._id);
-    res.cookie("jwt", token, { cookieOptions, maxAge: maxAge * 1000 });
+    res.cookie("jwt", token, { ...cookieOptions, maxAge: maxAge * 1000 });
     res.status(200).json({ user: user._id });
   } catch (error) {
     const errors = handleErrors(error);
     res.status(400).json(errors);
   }
+}
+
+
+export async function get_me(req,res) {
+  return res.status(200).json({user: req.user});
 }
 
 export async function logout_post(req, res) {

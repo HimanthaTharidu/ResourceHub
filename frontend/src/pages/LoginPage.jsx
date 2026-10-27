@@ -36,6 +36,7 @@ function LoginPage() {
         setEmailErrors(data.email || "");
         setpasswordErrors(data.password || "");
         setError(data.message || "");
+        return;
       }
       navigate('/dashboard')
     } catch (err) {
