@@ -1,49 +1,89 @@
 import User from "../models/User.js";
+import jwt from "jsonwebtoken";
 
 const handleErrors = (err) => {
-    console.log(err.message, err.code)
-    let errors = {email: '', password: ''};
+  console.log(err.message, err.code);
+  let errors = { email: "", password: "" };
 
-    //duplicate errors
-    if(err.code === 11000){
-        errors.email = "Email already exist";
-        return errors;
-    }
-    //validation errors
-    if(err.message.includes("User validation failed")){
-        Object.values(err.errors).forEach(({properties}) => {
-            errors[properties.path] = properties.message;
-        })
-    }
-    return errors
+  //incorrect email
+  if (err.message === "Incorrect email") {
+    errors.email = "that is not registered";
+  }
+  //incorrect email
+  if (err.message === "Incorrect password") {
+    errors.password = "that password is incorrect";
+  }
+  //duplicate errors
+  if (err.code === 11000) {
+    errors.email = "Email already exist";
+    return errors;
+  }
+  //validation errors
+  if (err.message.includes("User validation failed")) {
+    Object.values(err.errors).forEach(({ properties }) => {
+      errors[properties.path] = properties.message;
+    });
+  }
+  return errors;
+};
+
+const maxAge = 3 * 24 * 60 * 60;
+
+const createToken = (id) => {
+  return jwt.sign({ id }, process.env.JWT_SECRET, {
+    expiresIn: maxAge,
+  });
+};
+
+const cookieOptions = {
+  httpOnly: true,
+  secure: process.env.NODE_ENV === "production",
+  sameSite: "lax",
+  path: "/",
+};
+
+export async function signup_get(req, res) {
+  res.send("signup");
 }
 
-export async function signup_get(req,res,next) {
-    res.send('signup')
+export async function login_get(req, res) {
+  res.send("login");
 }
 
-export async function login_get(req,res,next) {
-    res.send('login')
+export async function signup_post(req, res) {
+  const { name, email, department, role, password } = req.body;
+
+  try {
+    const user = await User.create({
+      name,
+      email,
+      department,
+      role,
+      password,
+    });
+    const token = createToken(user._id);
+    res.cookie("jwt", token, { ...cookieOptions, maxAge: maxAge * 1000 });
+    res.status(201).json({ user: user._id });
+  } catch (err) {
+    const errors = handleErrors(err);
+    res.status(400).json(errors);
+  }
 }
 
-export async function signup_post(req,res,next) {
-    const {name, email, department, role, password} = req.body;
-
-    try {
-        const user = await User.create({
-            name, 
-            email, 
-            department, 
-            role, 
-            password
-        });
-        res.status(201).json(user)
-    } catch (err) {
-        const errors = handleErrors(err);
-        res.status(400).json(errors);
-    }
+export async function login_post(req, res) {
+  const { email, password } = req.body;
+  try {
+    const user = await User.login(email, password);
+    const token = createToken(user._id);
+    res.cookie("jwt", token, { cookieOptions, maxAge: maxAge * 1000 });
+    res.status(200).json({ user: user._id });
+  } catch (error) {
+    const errors = handleErrors(error);
+    res.status(400).json(errors);
+  }
 }
 
-export async function login_post(req,res,next) {
-    res.send('new signup')
+export async function logout_post(req, res) {
+  res.clearCookie("jwt", cookieOptions);
+  res.status(200).json({ message: "Logged out" });
 }
