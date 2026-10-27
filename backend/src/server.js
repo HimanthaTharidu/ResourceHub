@@ -1,5 +1,6 @@
 import express from "express"
 import authRoutes from './routes/authRoutes.js'
+import resourceRoute from './routes/resourceRoutes.js'
 import dotenv from 'dotenv'
 import connectDB from "./config/db.js";
 import cors from "cors"
@@ -19,6 +20,7 @@ app.use(express.json());
 app.use(cookieParser());
 
 app.use('/api/auth', authRoutes);
+app.use('/api/resources', resourceRoute)
 
 app.listen(5000, () => {
     console.log("server start at port", process.env.PORT);
