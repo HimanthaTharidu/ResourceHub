@@ -3,7 +3,7 @@ const categories = [
   "lecture_hall",
   "lecture_theatre",
   "auditorium",
-  "projector",
+  "equipment",
   "computer_lab",
 ];
 
@@ -24,10 +24,10 @@ const resourceSchema = new mongoose.Schema(
     },
     capacity: {
       type: Number,
-      min: 1,
+      default: null,
       required: function () {
         // Capacity is only required if it's a Room or Lab
-        return this.category === "Room" || this.category === "Lab";
+        return this.category === "lecture_hall" || this.category === "lecture_theatre" || this.category === "auditorium" || this.capacity === "computer_lab";
       },
     },
     location: {
