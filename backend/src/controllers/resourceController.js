@@ -24,7 +24,7 @@ export async function createResource(req, res) {
     res.status(201).json({ resource });
   } catch (error) {
     console.log("create resource error", error);
-    res.status(500).jsson({ message: "Server error while creating resource" });
+    res.status(500).json({ message: "Server error while creating resource" });
   }
 }
 
@@ -44,6 +44,7 @@ export async function getResource(req, res) {
     res.status(500).json({ message: "Server error while fetching resources" });
   }
 }
+
 
 export async function getResourceById(req, res) {
   try {

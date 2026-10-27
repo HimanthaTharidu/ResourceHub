@@ -6,11 +6,11 @@ const router = express.Router();
 
 router.route('/')
     .get(protect, getResource)
-    .post(protect, authorize("department_admin", "super_admin"), createResource)
+    .post(protect, authorize("admin"), createResource)
 
 router.route('/:id')
     .get(protect, getResourceById)
-    .delete(protect, authorize("department_admin", "super_admin"), deleteResource)
-    .put(protect, authorize("department_admin", "super_admin"), updateResource)
+    .delete(protect, authorize("admin"), deleteResource)
+    .put(protect, authorize("admin"), updateResource)
     
 export default router

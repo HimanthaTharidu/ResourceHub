@@ -1,4 +1,11 @@
 import mongoose from "mongoose";
+const categories = [
+  "lecture_hall",
+  "lecture_theatre",
+  "auditorium",
+  "projector",
+  "computer_lab",
+];
 
 const resourceSchema = new mongoose.Schema(
   {
@@ -9,11 +16,15 @@ const resourceSchema = new mongoose.Schema(
     },
     category: {
       type: String,
-      required: [true, "Please specify a category"],
-      enum: ["Room", "Equipment", "Lab", "Other"],
+      required: [true, "Please choose a category"],
+      enum: {
+        values: categories,
+        message: "Please choose a valid resource category",
+      },
     },
     capacity: {
       type: Number,
+      min: 1,
       required: function () {
         // Capacity is only required if it's a Room or Lab
         return this.category === "Room" || this.category === "Lab";
@@ -33,8 +44,10 @@ const resourceSchema = new mongoose.Schema(
     },
     department: {
       type: String,
-      required: [true, "Please specify the managing department"],
+      ref: "Department",
+      default: null,
     },
+    //requiresApproval: { type: Boolean, default: false },
     createdBy: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
