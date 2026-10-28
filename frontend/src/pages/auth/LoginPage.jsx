@@ -44,7 +44,7 @@ function LoginPage() {
       if (!user) {
         throw new Error("Could not load your account");
       }
-      navigate(user.role === "admin" ? "/admin" : "/resources", {
+      navigate(user.role === "admin" ? "/admin" : "/dashboard", {
         replace: true,
       });
     } catch (err) {

@@ -119,6 +119,7 @@ export async function getMyReservations(req, res) {
       .sort({ createdAt: -1 });
 
     return res.status(200).json({ reservations });
+    
   } catch (error) {
     console.error("Get my reservations error:", error);
     return res

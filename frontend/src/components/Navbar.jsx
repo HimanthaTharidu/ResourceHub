@@ -18,7 +18,7 @@ export default function Navbar() {
     <header className="navbar sticky top-0 z-30 border-b border-base-300 bg-base-100 px-4 shadow-sm sm:px-6">
       <div className="flex-1 gap-2">
         <label
-          htmlFor="resourcehub-sidebar"
+          htmlFor="close-sidebar"
           className="btn btn-square btn-ghost lg:hidden"
           aria-label="Open navigation menu"
         >

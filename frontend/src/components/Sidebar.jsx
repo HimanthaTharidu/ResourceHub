@@ -23,9 +23,10 @@ function NavigationLinks({ onNavigate }) {
         </>
       ) : (
         <>
-          <NavLink to="/resources" className={linkClass} onClick={onNavigate}>Browse resources</NavLink>
           <NavLink to="/dashboard" className={linkClass} onClick={onNavigate}>My dashboard</NavLink>
-          <NavLink to="/reservations" className={linkClass} onClick={onNavigate}>My Reservation</NavLink>
+          <NavLink to="/resources" className={linkClass} onClick={onNavigate}>Browse resources</NavLink>
+          <NavLink to="/reservations" end className={linkClass} onClick={onNavigate}>My Reservations</NavLink>
+          <NavLink to="/reservations/new" className={linkClass} onClick={onNavigate}>Request a Resource</NavLink>
         </>
       )}
     </nav>

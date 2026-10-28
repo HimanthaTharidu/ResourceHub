@@ -11,6 +11,8 @@ import ManageResourcesPage from "./pages/admin/ManageResourcesPage";
 import ResourceFormPage from "./pages/admin/ResourceFormPage";
 import AppLayout from "./layouts/AppLayout";
 import MyReservationsPage from "./pages/reservations/MyReservationsPage";
+import CreateReservationPage from "./pages/reservations/CreateReservationPage";
+import ReservationDetailsPage from "./pages/reservations/ReservationDetailsPage";
 import "./App.css";
 
 function App() {
@@ -25,7 +27,13 @@ function App() {
           <Route path="/dashboard" element={<DashboardPage />} />
           <Route path="/resources" element={<ResourceListPage />} />
           <Route path="/resources/:id" element={<ResourceDetailsPage />} />
-          <Route path="/reservation" element={<MyReservationsPage/>}/>
+          <Route path="/reservations" element={<MyReservationsPage/>}/>
+          <Route path="/reservations/new" element={<CreateReservationPage/>}/>
+          <Route path="/reservations/:id/edit" element={<CreateReservationPage/>}/>
+          <Route path="/reservations/:id" element={<ReservationDetailsPage/>}/>
+
+          <Route />
+
 
           <Route element={<ProtectedRoute allowedRoles={["admin"]} />}>
             <Route path="/admin" element={<AdminDashboardPage />} />
