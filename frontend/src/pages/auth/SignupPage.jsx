@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 function SignupPage() {
   const navigate = useNavigate();
@@ -39,70 +39,122 @@ function SignupPage() {
         },
       );
       const data = await response.json();
-      //console.log(data.email)
+
       if (!response.ok) {
         setEmailErrors(data.email || "");
         setpasswordErrors(data.password || "");
         setError(data.message || "");
         return;
       }
+
       navigate("/dashboard");
     } catch (err) {
-      //throw new Error("Signup failed");
       setError(err.message);
     } finally {
       setLoading(false);
     }
   }
+
   return (
-    <main>
-      <h1>Sign Up</h1>
-      <form onSubmit={handleSubmit}>
-        <label>Name</label>
-        <input
-          name="name"
-          type="text"
-          value={form.name}
-          onChange={handleChange}
-          required
-        />
-        <label>Department</label>
-        <input
-          name="department"
-          type="text"
-          value={form.department}
-          onChange={handleChange}
-          required
-        />
-        <label>Email</label>
-        <input
-          name="email"
-          type="text"
-          value={form.email}
-          onChange={handleChange}
-          required
-        />
-        {emailErrors && (
-          <p role="alert" className="email error">
-            {emailErrors}
+    <main className="flex min-h-screen items-center justify-center bg-base-200 p-4">
+      <section className="card w-full max-w-md border border-base-300 bg-base-100 shadow-xl">
+        <div className="card-body">
+          <div className="mb-3 text-center">
+            <h1 className="text-3xl font-bold">Create your account</h1>
+            <p className="mt-2 text-base-content/70">
+              Sign up to browse and request resources.
+            </p>
+          </div>
+
+          <form onSubmit={handleSubmit} className="space-y-3">
+            <label className="form-control">
+              <span className="label"><span className="label-text">Name</span></span>
+              <input
+                id="name"
+                className="input input-bordered w-full mb-3"
+                name="name"
+                type="text"
+                autoComplete="name"
+                value={form.name}
+                onChange={handleChange}
+                required
+              />
+            </label>
+
+            <label className="form-control">
+              <span className="label"><span className="label-text">Department</span></span>
+              <input
+                id="department"
+                className="input input-bordered w-full mb-3"
+                name="department"
+                type="text"
+                value={form.department}
+                onChange={handleChange}
+                required
+              />
+            </label>
+
+            <label className="form-control">
+              <span className="label"><span className="label-text">Email</span></span>
+              <input
+                id="email"
+                className={`input input-bordered w-full mb-3 ${emailErrors ? "input-error" : ""}`}
+                name="email"
+                type="email"
+                autoComplete="email"
+                value={form.email}
+                onChange={handleChange}
+                required
+                aria-invalid={Boolean(emailErrors)}
+                aria-describedby={emailErrors ? "email-error" : undefined}
+              />
+              {emailErrors && (
+                <span id="email-error" role="alert" className="mt-1 text-sm text-error">
+                  {emailErrors}
+                </span>
+              )}
+            </label>
+
+            <label className="form-control">
+              <span className="label"><span className="label-text">Password</span></span>
+              <input
+                id="password"
+                className={`input input-bordered w-full mb-6 ${passwordErrors ? "input-error" : ""}`}
+                name="password"
+                type="password"
+                autoComplete="new-password"
+                value={form.password}
+                onChange={handleChange}
+                required
+                aria-invalid={Boolean(passwordErrors)}
+                aria-describedby={passwordErrors ? "password-error" : undefined}
+              />
+              {passwordErrors && (
+                <span id="password-error" role="alert" className="mt-1 text-sm text-error">
+                  {passwordErrors}
+                </span>
+              )}
+            </label>
+
+            {error && (
+              <div role="alert" className="alert alert-error py-2">
+                <span>{error}</span>
+              </div>
+            )}
+
+            <button type="submit" className="btn btn-primary w-full" disabled={loading}>
+              {loading ? <><span className="loading loading-spinner loading-sm" /> Creating account…</> : "Sign up"}
+            </button>
+          </form>
+
+          <p className="mt-2 text-center text-sm">
+            Already have an account?{" "}
+            <Link to="/login" className="link link-primary font-medium">
+              Log in
+            </Link>
           </p>
-        )}
-        <label>Password</label>
-        <input
-          name="password"
-          type="password"
-          value={form.password}
-          onChange={handleChange}
-          required
-        />
-        {passwordErrors && (
-          <p role="alert" className="password error">
-            {passwordErrors}
-          </p>
-        )}
-        <button>Sign up</button>
-        {error && <div className="error">{error}</div>}
-      </form>
+        </div>
+      </section>
     </main>
   );
 }

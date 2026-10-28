@@ -1,16 +1,11 @@
 import { NavLink } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 
-const linkClass = ({ isActive }) =>
-  `flex items-center rounded-lg px-3 py-2 text-sm font-medium transition-colors ${
-    isActive
-      ? "bg-primary text-primary-content"
-      : "text-base-content hover:bg-base-200"
-  }`;
-
 function NavigationLinks({ onNavigate }) {
   const { user } = useAuth();
   const isAdmin = user?.role === "admin";
+  const linkClass = ({ isActive }) =>
+    `btn btn-ghost justify-start ${isActive ? "bg-primary text-primary-content" : ""}`;
 
   return (
     <nav className="flex flex-col gap-1" aria-label="Main navigation">
@@ -23,33 +18,60 @@ function NavigationLinks({ onNavigate }) {
         </>
       ) : (
         <>
-          <NavLink to="/dashboard" className={linkClass} onClick={onNavigate}>My dashboard</NavLink>
+         <NavLink end to="/dashboard" className={linkClass} onClick={onNavigate}>Dashboard</NavLink>
           <NavLink to="/resources" className={linkClass} onClick={onNavigate}>Browse resources</NavLink>
-          <NavLink to="/reservations" end className={linkClass} onClick={onNavigate}>My Reservations</NavLink>
-          <NavLink to="/reservations/new" className={linkClass} onClick={onNavigate}>Request a Resource</NavLink>
+          <NavLink end to="/reservations" className={linkClass} onClick={onNavigate}>My reservations</NavLink>
+          <NavLink to="/reservations/new" className={linkClass} onClick={onNavigate}>Request a resource</NavLink>
         </>
       )}
     </nav>
   );
 }
 
-export default function Sidebar() {
-  function closeMobileMenu() {
-    const toggle = document.getElementById("close-sidebar");
-    if (toggle) toggle.checked = false;
+export default function Sidebar({ onClose }) {
+  function closeOnMobileNavigation() {
+    if (window.matchMedia("(max-width: 1023px)").matches) onClose();
   }
 
   return (
-    <div className="drawer-side z-40">
-      <label htmlFor="close-sidebar" aria-label="Close navigation menu" className="drawer-overlay" />
-      <aside className="min-h-full w-72 border-r border-base-300 bg-base-100 p-4 lg:w-64">
-        <div className="mb-6 flex items-center justify-between lg:hidden">
-          <span className="font-bold text-primary">ResourceHub</span>
-          <label htmlFor="close-sidebar" className="btn btn-square btn-ghost btn-sm" aria-label="Close navigation menu">✕</label>
+    <>
+      <aside className="hidden w-64 shrink-0 border-r border-base-300 bg-base-100 p-4 lg:block">
+        <div className="mb-1 flex items-center justify-end">
+          <button
+            type="button"
+            className="btn btn-square btn-ghost btn-sm"
+            onClick={onClose}
+            aria-label="Collapse sidebar"
+          >
+            ✕
+          </button>
         </div>
-        <p className="mb-3 px-3 text-xs font-semibold uppercase tracking-wider text-base-content/50">Workspace</p>
-        <NavigationLinks onNavigate={closeMobileMenu} />
+        <NavigationLinks />
       </aside>
-    </div>
+
+      <div className="fixed inset-0 z-40 flex lg:hidden">
+        <button
+          type="button"
+          className="absolute inset-0 bg-black/40"
+          onClick={onClose}
+          aria-label="Close sidebar"
+        />
+        <aside className="relative z-10 min-h-full w-72 bg-base-100 p-4 shadow-xl">
+          <div className="mb-6 flex items-center justify-between">
+            <span className="font-bold text-primary">ResourceHub</span>
+            <button
+              type="button"
+              className="btn btn-square btn-ghost btn-sm"
+              onClick={onClose}
+              aria-label="Close sidebar"
+            >
+              ✕
+            </button>
+          </div>
+          <NavigationLinks onNavigate={closeOnMobileNavigation} />
+        </aside>
+      </div>
+    </>
   );
 }
+

@@ -47,3 +47,15 @@ export function updateReservation(id, values) {
 export function cancelReservation(id) {
   return request(`/${id}`, { method: "DELETE" });
 }
+
+export async function getAllReservations() {
+  const data = await request("");
+  return data.reservations;
+}
+
+export function setReservationStatus(id, status, adminNotes = "") {
+  return request(`/${id}/status`, {
+    method: "PATCH",
+    body: JSON.stringify({ status, adminNotes }),
+  });
+}

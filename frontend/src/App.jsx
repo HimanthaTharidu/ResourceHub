@@ -26,7 +26,7 @@ function App() {
         <Route element={<AppLayout />}>
           <Route path="/dashboard" element={<DashboardPage />} />
           <Route path="/resources" element={<ResourceListPage />} />
-          <Route path="/resources/:id" element={<ResourceDetailsPage />} />
+          
           <Route path="/reservations" element={<MyReservationsPage/>}/>
           <Route path="/reservations/new" element={<CreateReservationPage/>}/>
           <Route path="/reservations/:id/edit" element={<CreateReservationPage/>}/>
@@ -39,7 +39,9 @@ function App() {
             <Route path="/admin" element={<AdminDashboardPage />} />
             <Route path="/admin/resources" element={<ManageResourcesPage />} />
             <Route path="/admin/resources/new" element={<ResourceFormPage />} />
+            <Route path="/admin/resources/:id/edit" element={<ResourceFormPage />} />
             <Route path="/admin/reservations" element={<ManageReservationsPage />} />
+            <Route path="/admin/reservations/:id" element={<ReservationDetailsPage />}/>
           </Route>
         </Route>
       </Route>

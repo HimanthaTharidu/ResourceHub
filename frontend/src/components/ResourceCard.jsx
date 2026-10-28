@@ -1,8 +1,6 @@
-import { Link } from "react-router-dom";
-
-export default function ResourceCard({ resource }) {
+export default function ResourceCard({ resource, onViewDetails }) {
   return (
-    <article className="card bg-base-100 border border-base-300 shadow-sm">
+    <article className="card border border-base-300 bg-base-100 shadow-sm">
       <div className="card-body">
         <div className="flex justify-between gap-3">
           <div>
@@ -23,12 +21,13 @@ export default function ResourceCard({ resource }) {
         {resource.capacity != null && <p>Capacity: {resource.capacity}</p>}
 
         <div className="card-actions justify-end">
-          <Link
-            to={`/resources/${resource._id}`}
+          <button
+            type="button"
             className="btn btn-primary btn-sm"
+            onClick={() => onViewDetails(resource)}
           >
             View details
-          </Link>
+          </button>
         </div>
       </div>
     </article>
