@@ -34,17 +34,17 @@ function NavigationLinks({ onNavigate }) {
 
 export default function Sidebar() {
   function closeMobileMenu() {
-    const toggle = document.getElementById("sidebar");
+    const toggle = document.getElementById("close-sidebar");
     if (toggle) toggle.checked = false;
   }
 
   return (
     <div className="drawer-side z-40">
-      <label htmlFor="sidebar" aria-label="Close navigation menu" className="drawer-overlay" />
+      <label htmlFor="close-sidebar" aria-label="Close navigation menu" className="drawer-overlay" />
       <aside className="min-h-full w-72 border-r border-base-300 bg-base-100 p-4 lg:w-64">
         <div className="mb-6 flex items-center justify-between lg:hidden">
           <span className="font-bold text-primary">ResourceHub</span>
-          <label htmlFor="sidebar" className="btn btn-square btn-ghost btn-sm" aria-label="Close navigation menu">✕</label>
+          <label htmlFor="close-sidebar" className="btn btn-square btn-ghost btn-sm" aria-label="Close navigation menu">✕</label>
         </div>
         <p className="mb-3 px-3 text-xs font-semibold uppercase tracking-wider text-base-content/50">Workspace</p>
         <NavigationLinks onNavigate={closeMobileMenu} />
