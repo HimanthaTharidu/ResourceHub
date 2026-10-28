@@ -1,5 +1,4 @@
-import { useState } from "react";
-import { Route, Routes, Navigate, BrowserRouter } from "react-router-dom";
+import { Navigate, Route, Routes } from "react-router-dom";
 import SignupPage from "./pages/auth/SignupPage";
 import LoginPage from "./pages/auth/LoginPage";
 import DashboardPage from "./pages/DashboardPage";
@@ -7,29 +6,37 @@ import ResourceDetailsPage from "./pages/resources/ResourceDetailsPage";
 import ResourceListPage from "./pages/resources/ResourceListPage";
 import ProtectedRoute from "./components/AuthProvider";
 import AdminDashboardPage from "./pages/admin/AdminDashboardPage";
+import ManageReservationsPage from "./pages/admin/ManageReservationsPage";
+import ManageResourcesPage from "./pages/admin/ManageResourcesPage";
 import ResourceFormPage from "./pages/admin/ResourceFormPage";
-
+import AppLayout from "./layouts/AppLayout";
+import MyReservationsPage from "./pages/reservations/MyReservationsPage";
 import "./App.css";
 
 function App() {
   return (
     <Routes>
-      <Route path="/" element={<Navigate to="/login" replace />} />
+      <Route path="/" element={<Navigate to="/resources" replace />} />
       <Route path="/signup" element={<SignupPage />} />
       <Route path="/login" element={<LoginPage />} />
-      <Route path="/dashboard" element={<DashboardPage />} />
 
       <Route element={<ProtectedRoute />}>
-        <Route path="/resources" element={<ResourceListPage />} />
-        <Route path="/resources/:id" element={<ResourceDetailsPage />} />
-      </Route>
+        <Route element={<AppLayout />}>
+          <Route path="/dashboard" element={<DashboardPage />} />
+          <Route path="/resources" element={<ResourceListPage />} />
+          <Route path="/resources/:id" element={<ResourceDetailsPage />} />
+          <Route path="/reservation" element={<MyReservationsPage/>}/>
 
-      <Route>
-        <Route element={<ProtectedRoute allowedRoles={["admin"]} />}>
-          <Route path="/admin" element={<AdminDashboardPage />} />
-          <Route path="/admin/resources/new" element={<ResourceFormPage/>}/>
+          <Route element={<ProtectedRoute allowedRoles={["admin"]} />}>
+            <Route path="/admin" element={<AdminDashboardPage />} />
+            <Route path="/admin/resources" element={<ManageResourcesPage />} />
+            <Route path="/admin/resources/new" element={<ResourceFormPage />} />
+            <Route path="/admin/reservations" element={<ManageReservationsPage />} />
+          </Route>
         </Route>
       </Route>
+
+      <Route path="*" element={<Navigate to="/resources" replace />} />
     </Routes>
   );
 }
