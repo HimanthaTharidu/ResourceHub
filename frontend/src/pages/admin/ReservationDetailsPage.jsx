@@ -3,7 +3,7 @@ import { Link, useParams } from "react-router-dom";
 import {
   getReservationById,
   setReservationStatus,
-} from "../../api/reservations";
+} from "../../api/reservation";
 
 export default function ReservationDetailsPage() {
   const { id } = useParams();

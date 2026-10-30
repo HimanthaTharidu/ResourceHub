@@ -27,7 +27,7 @@ const handleErrors = (err) => {
   return errors;
 };
 
-const maxAge = 3 * 24 * 60 * 60;
+const maxAge = 1 * 24 * 60 * 60;
 
 const createToken = (id) => {
   return jwt.sign({ id }, process.env.JWT_SECRET, {
@@ -84,6 +84,7 @@ export async function login_post(req, res) {
 
 
 export async function get_me(req,res) {
+  res.set("Cache-Control", "no-store");
   return res.status(200).json({user: req.user});
 }
 

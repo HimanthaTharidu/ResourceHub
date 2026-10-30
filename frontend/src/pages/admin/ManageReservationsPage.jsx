@@ -39,8 +39,14 @@ export default function ManageReservationsPage() {
     setError("");
 
     try {
-      await setReservationStatus(id, status);
-      await loadReservations();
+      const updatedReservation = await setReservationStatus(id, status);
+      setReservations((currentReservations) =>
+        currentReservations.map((reservation) =>
+          reservation._id === updatedReservation._id
+            ? updatedReservation
+            : reservation,
+        ),
+      );
     } catch (err) {
       setError(err.message || "Could not update reservation.");
     } finally {

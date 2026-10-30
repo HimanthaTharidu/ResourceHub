@@ -5,14 +5,17 @@ import DashboardPage from "./pages/DashboardPage";
 import ResourceDetailsPage from "./pages/resources/ResourceDetailsPage";
 import ResourceListPage from "./pages/resources/ResourceListPage";
 import ProtectedRoute from "./components/AuthProvider";
+
 import AdminDashboardPage from "./pages/admin/AdminDashboardPage";
 import ManageReservationsPage from "./pages/admin/ManageReservationsPage";
 import ManageResourcesPage from "./pages/admin/ManageResourcesPage";
 import ResourceFormPage from "./pages/admin/ResourceFormPage";
+import ReservationDetailsPage from "./pages/admin/ReservationDetailsPage";
+
 import AppLayout from "./layouts/AppLayout";
 import MyReservationsPage from "./pages/reservations/MyReservationsPage";
 import CreateReservationPage from "./pages/reservations/CreateReservationPage";
-import ReservationDetailsPage from "./pages/reservations/ReservationDetailsPage";
+import MyReservationDetailsPage from "./pages/reservations/MyReservationDetailsPage";
 import "./App.css";
 
 function App() {
@@ -30,7 +33,7 @@ function App() {
           <Route path="/reservations" element={<MyReservationsPage/>}/>
           <Route path="/reservations/new" element={<CreateReservationPage/>}/>
           <Route path="/reservations/:id/edit" element={<CreateReservationPage/>}/>
-          <Route path="/reservations/:id" element={<ReservationDetailsPage/>}/>
+          <Route path="/reservations/:id" element={<MyReservationDetailsPage/>}/>
 
           <Route />
 
