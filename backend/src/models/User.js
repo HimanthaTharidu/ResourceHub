@@ -20,11 +20,11 @@ const userSchema = mongoose.Schema(
         password: {
             type: String,
             required: [true, "Please add a password"],
-            minlength: [6, "minimum length should me 6"]
+            minlength: [6, "minimum length should bee 6"]
         },
         role: {
             type: String,
-            enum: ['faculty', 'department_admin', 'super_admin'],
+            enum: ['faculty', 'admin'],
             default: 'faculty'
         },
         department: {
@@ -35,13 +35,15 @@ const userSchema = mongoose.Schema(
     {timestams: true}
 )
 userSchema.pre('save', async function(){
+    if (!this.isModified("password")) return;
+
     const salt = await bcrypt.genSalt();
     this.password = await bcrypt.hash(this.password, salt);
 })
 
-userSchema.post('saved', function(doc){
+/*userSchema.post('save', function(doc){
     console.log('new user created & saved', doc)
-})
+})*/
 
 //static method to login
 userSchema.statics.login = async function (email, password) {
