@@ -3,10 +3,14 @@ const API_URL = import.meta.env.VITE_API_URL;
 export async function getCurrentUser() {
   const response = await fetch(`${API_URL}/auth/me`, {
     credentials: "include",
+    cache: "no-store",
   });
 
-  if (!response.ok) {
+  if (response.status === 401) {
     throw new Error("Not logged in");
+  }
+  if (!response.ok) {
+    throw new Error(`Could not load user (${response.status})`);
   }
 
   return response.json();
@@ -23,7 +27,10 @@ export async function login(credentials) {
   const data = await response.json();
 
   if (!response.ok) {
-    throw new Error(data.message || "Login failed");
+    const error = new Error(data.message || "Login failed");
+    error.email = data.email;
+    error.password = data.password;
+    throw error;
   }
 
   return data;

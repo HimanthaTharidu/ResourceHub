@@ -53,9 +53,12 @@ export async function getAllReservations() {
   return data.reservations;
 }
 
-export function setReservationStatus(id, status, adminNotes = "") {
-  return request(`/${id}/status`, {
+
+export async function setReservationStatus(id, status, adminNotes = "") {
+  const data = await request(`/${id}/status`, {
     method: "PATCH",
     body: JSON.stringify({ status, adminNotes }),
   });
+
+  return data.reservation;
 }

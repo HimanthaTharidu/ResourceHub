@@ -84,6 +84,7 @@ export async function login_post(req, res) {
 
 
 export async function get_me(req,res) {
+  res.set("Cache-Control", "no-store");
   return res.status(200).json({user: req.user});
 }
 
