@@ -7,12 +7,11 @@ import {
 } from "../../api/resources";
 
 const categories = [
-  
-  "lecture_hall",
-  "lecture_theatre",
-  "auditorium",
-  "equipment",
-  "computer_lab",
+  { value: "lecture_hall", label: "Lecture Hall" },
+  { value: "lecture_theatre", label: "Lecture Theatre" },
+  { value: "auditorium", label: "Auditorium" },
+  { value: "equipment", label: "Equipment" },
+  { value: "computer_lab", label: "Computer Lab" },
 ];
 
 const emptyForm = {
@@ -74,6 +73,7 @@ export default function ResourceFormPage() {
     };
     if (!form.category) {
       setError("Please choose a category.");
+      setSaving(false);
       return;
     }
 
@@ -137,24 +137,23 @@ export default function ResourceFormPage() {
 
           <div className="dropdown dropdown-bottom">
             <div tabIndex={0} role="button" className="btn m-1">
-              {form.category
-                ? form.category.replaceAll("_", " ")
-                : "Choose category"}{" "}
+              {categories.find((item) => item.value === form.category)?.label ??
+                "Choose category"}
             </div>
 
             <ul
               tabIndex={-1}
               className="dropdown-content menu bg-base-100 rounded-box z-1 w-52 p-2 shadow-sm"
             >
-              {categories.map((category) => (
-                <li key={category}>
+              {categories.map(({ value, label }) => (
+                <li key={value}>
                   <button
                     type="button"
                     onClick={() =>
-                      setForm((previous) => ({ ...previous, category }))
+                      setForm((previous) => ({ ...previous, category: value }))
                     }
                   >
-                    {category.replaceAll("_", " ")}
+                    {label}
                   </button>
                 </li>
               ))}
