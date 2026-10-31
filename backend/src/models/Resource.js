@@ -25,10 +25,17 @@ const resourceSchema = new mongoose.Schema(
     capacity: {
       type: Number,
       default: null,
-      required: function () {
-        // Capacity is only required if it's a Room or Lab
-        return this.category === "lecture_hall" || this.category === "lecture_theatre" || this.category === "auditorium" || this.capacity === "computer_lab";
-      },
+      required: [
+        function () {
+          return [
+            "lecture_hall",
+            "lecture_theatre",
+            "auditorium",
+            "computer_lab",
+          ].includes(this.category);
+        },
+        "Please add a capacity for this resource",
+      ],
     },
     location: {
       type: String,

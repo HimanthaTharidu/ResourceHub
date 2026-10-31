@@ -74,7 +74,9 @@ export default function ManageReservationsPage() {
       {error && (
         <div role="alert" className="alert alert-error">
           <span>{error}</span>
-          <button className="btn btn-sm" onClick={loadReservations}>Try again</button>
+          <button className="btn btn-sm" onClick={loadReservations}>
+            Try again
+          </button>
         </div>
       )}
 
@@ -83,79 +85,149 @@ export default function ManageReservationsPage() {
           <span>No reservation requests have been submitted.</span>
         </div>
       ) : (
-        <div className="overflow-x-auto rounded-box border border-base-300 bg-base-100">
-          <table className="table">
-            <thead>
-              <tr>
-                <th>Resource</th>
-                <th>Requested by</th>
-                <th>Time</th>
-                <th>Status</th>
-                <th>Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              {reservations.map((reservation) => (
-                <tr key={reservation._id}>
-                  <td>{reservation.resource?.name || "Resource"}</td>
-                  <td>
-                    {reservation.requestedBy?.name || "Faculty"}
-                    <div className="text-xs text-base-content/60">
-                      {reservation.requestedBy?.email}
-                    </div>
-                  </td>
-                  <td>
-                    <div>{new Date(reservation.startTime).toLocaleString()}</div>
-                    <div className="text-xs text-base-content/60">
-                      to {new Date(reservation.endTime).toLocaleString()}
-                    </div>
-                  </td>
-                  <td>
+        <>
+          <div className="hidden md:block overflow-x-auto rounded-box border border-base-300 bg-base-100">
+            <table className="table">
+              <thead>
+                <tr>
+                  <th>Resource</th>
+                  <th>Requested by</th>
+                  <th>Time</th>
+                  <th>Status</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                {reservations.map((reservation) => (
+                  <tr key={reservation._id}>
+                    <td>{reservation.resource?.name || "Resource"}</td>
+                    <td>
+                      {reservation.requestedBy?.name || "Faculty"}
+                      <div className="text-xs text-base-content/60">
+                        {reservation.requestedBy?.email}
+                      </div>
+                    </td>
+                    <td>
+                      <div>
+                        {new Date(reservation.startTime).toLocaleString()}
+                      </div>
+                      <div className="text-xs text-base-content/60">
+                        to {new Date(reservation.endTime).toLocaleString()}
+                      </div>
+                    </td>
+                    <td>
+                      <span
+                        className={`badge ${
+                          statusStyles[reservation.status] || "badge-ghost"
+                        }`}
+                      >
+                        {reservation.status}
+                      </span>
+                    </td>
+                    <td>
+                      <div className="flex flex-wrap gap-2">
+                        <Link
+                          to={`/admin/reservations/${reservation._id}`}
+                          className="btn btn-ghost btn-sm"
+                        >
+                          Details
+                        </Link>
+                        {reservation.status === "pending" && (
+                          <>
+                            <button
+                              className="btn btn-success btn-sm"
+                              disabled={workingId === reservation._id}
+                              onClick={() =>
+                                reviewReservation(reservation._id, "approved")
+                              }
+                            >
+                              Approve
+                            </button>
+                            <button
+                              className="btn btn-error btn-sm"
+                              disabled={workingId === reservation._id}
+                              onClick={() =>
+                                reviewReservation(reservation._id, "rejected")
+                              }
+                            >
+                              Reject
+                            </button>
+                          </>
+                        )}
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+
+          <div className="space-y-3 md:hidden">
+            {reservations.map((reservation) => (
+              <article
+                key={reservation._id}
+                className="card border border-base-300 bg-base-100"
+              >
+                <div className="card-body gap-2 p-4">
+                  <div className="flex items-start justify-between gap-2">
+                    <h2 className="font-semibold">
+                      {reservation.resource?.name || "Resource"}
+                    </h2>
                     <span
-                      className={`badge ${
-                        statusStyles[reservation.status] || "badge-ghost"
-                      }`}
+                      className={`badge ${statusStyles[reservation.status] || "badge-ghost"}`}
                     >
                       {reservation.status}
                     </span>
-                  </td>
-                  <td>
-                    <div className="flex flex-wrap gap-2">
-                      <Link
-                        to={`/admin/reservations/${reservation._id}`}
-                        className="btn btn-ghost btn-sm"
-                      >
-                        Details
-                      </Link>
-                      {reservation.status === "pending" && (
-                        <>
-                          <button
-                            className="btn btn-success btn-sm"
-                            disabled={workingId === reservation._id}
-                            onClick={() =>
-                              reviewReservation(reservation._id, "approved")
-                            }
-                          >
-                            Approve
-                          </button>
-                          <button
-                            className="btn btn-error btn-sm"
-                            disabled={workingId === reservation._id}
-                            onClick={() =>
-                              reviewReservation(reservation._id, "rejected")
-                            }
-                          >
-                            Reject
-                          </button>
-                        </>
-                      )}
-                    </div>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+                  </div>
+
+                  <p className="text-sm">
+                    {reservation.requestedBy?.name || "Faculty"}
+                    <span className="block text-xs text-base-content/60">
+                      {reservation.requestedBy?.email}
+                    </span>
+                  </p>
+
+                  <p className="text-xs text-base-content/70">
+                    {new Date(reservation.startTime).toLocaleString()}
+                    <br />
+                    to {new Date(reservation.endTime).toLocaleString()}
+                  </p>
+
+                  <div className="card-actions mt-1 flex-wrap">
+                    <Link
+                      to={`/admin/reservations/${reservation._id}`}
+                      className="btn btn-ghost btn-sm"
+                    >
+                      Details
+                    </Link>
+                    {reservation.status === "pending" && (
+                      <>
+                        <button
+                          className="btn btn-success btn-sm"
+                          disabled={workingId === reservation._id}
+                          onClick={() =>
+                            reviewReservation(reservation._id, "approved")
+                          }
+                        >
+                          Approve
+                        </button>
+                        <button
+                          className="btn btn-error btn-sm"
+                          disabled={workingId === reservation._id}
+                          onClick={() =>
+                            reviewReservation(reservation._id, "rejected")
+                          }
+                        >
+                          Reject
+                        </button>
+                      </>
+                    )}
+                  </div>
+                </div>
+              </article>
+            ))}
+          </div>
+        </>
       )}
     </section>
   );

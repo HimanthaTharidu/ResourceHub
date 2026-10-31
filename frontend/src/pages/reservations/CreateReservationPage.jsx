@@ -55,8 +55,7 @@ export default function CreateReservationPage() {
 
           setReservationStatus(reservation.status);
           setForm({
-            resourceId:
-              typeof resource === "object" ? resource?._id : resource,
+            resourceId: typeof resource === "object" ? resource?._id : resource,
             startTime: toLocalDateTime(reservation.startTime),
             endTime: toLocalDateTime(reservation.endTime),
             purpose: reservation.purpose || "",
@@ -159,7 +158,9 @@ export default function CreateReservationPage() {
 
       {isEditing && !canEdit && (
         <div role="alert" className="alert alert-warning">
-          <span>This reservation is no longer pending, so it can’t be edited.</span>
+          <span>
+            This reservation is no longer pending, so it can’t be edited.
+          </span>
         </div>
       )}
 
@@ -170,7 +171,7 @@ export default function CreateReservationPage() {
         <div className="card-body gap-4">
           <label className="form-control">
             <span className="label">
-              <span className="label-text font-medium">Resource</span>
+              <span className="label-text font-medium">Resource </span>
             </span>
             <select
               className="select select-bordered"
@@ -221,21 +222,19 @@ export default function CreateReservationPage() {
             </label>
           </div>
 
-          <label className="form-control">
-            <span className="label">
-              <span className="label-text font-medium">Purpose</span>
-            </span>
+          <fieldset className="fieldset">
+            <legend className="fieldset-legend font-medium">Purpose</legend>
             <textarea
-              className="textarea textarea-bordered min-h-28"
+              className="textarea h-24"
+              placeholder="What will you use the resource for?"
               name="purpose"
               value={form.purpose}
               onChange={handleChange}
               maxLength={500}
-              placeholder="What will you use the resource for?"
               required
               disabled={!canEdit}
-            />
-          </label>
+            ></textarea>
+          </fieldset>
 
           {availableResources.length === 0 && (
             <p className="text-sm text-warning">
@@ -250,15 +249,9 @@ export default function CreateReservationPage() {
             <button
               type="submit"
               className="btn btn-primary"
-              disabled={
-                saving || !canEdit || availableResources.length === 0
-              }
+              disabled={saving || !canEdit || availableResources.length === 0}
             >
-              {saving
-                ? "Saving…"
-                : isEditing
-                  ? "Save changes"
-                  : "Send request"}
+              {saving ? "Saving…" : isEditing ? "Save changes" : "Send request"}
             </button>
           </div>
         </div>

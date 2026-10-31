@@ -70,6 +70,7 @@ export default function ResourceFormPage() {
     const values = {
       ...form,
       capacity: form.capacity === "" ? null : Number(form.capacity),
+      department: form.department.trim() || null,
     };
     if (!form.category) {
       setError("Please choose a category.");
@@ -169,7 +170,6 @@ export default function ResourceFormPage() {
               name="capacity"
               value={form.capacity}
               onChange={handleChange}
-              required
             />
           </fieldset>
 
@@ -195,7 +195,6 @@ export default function ResourceFormPage() {
               name="department"
               value={form.department}
               onChange={handleChange}
-              required
             />
           </fieldset>
 

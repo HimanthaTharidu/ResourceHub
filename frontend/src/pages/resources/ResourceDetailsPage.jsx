@@ -22,7 +22,7 @@ export default function ResourceDetailsPage() {
   if (error) return <p className="alert alert-error m-6">{error}</p>;
 
   return (
-    <main className="mx-auto max-w-2xl p-6">
+    <main className="mx-auto max-w-2xl p-4 sm:p-6">
       <Link to="/resources" className="link mb-4 inline-block">
         ← Back to resources
       </Link>
