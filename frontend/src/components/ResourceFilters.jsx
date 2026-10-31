@@ -23,23 +23,23 @@ export default function ResourceFilter({ filters, onChange }) {
       ?.label ?? "Any availability";
 
   return (
-    <div>
+    <div className="flex flex-col gap-2 sm:flex-row sm:flex-wrap sm:items-center">
       <input
-        className="input input-bordered"
+        className="input input-bordered w-full sm:w-64"
         type="search"
         placeholder="Search resources"
         value={filters.search}
         onChange={(event) => onChange("search", event.target.value)}
       />
 
-      <div className="dropdown dropdown-bottom">
-        <div tabIndex={0} role="button" className="btn m-1">
+      <div className="dropdown dropdown-bottom w-full sm:w-auto">
+        <div tabIndex={0} role="button" className="btn w-full">
           {selectedLabel}
         </div>
 
         <ul
           tabIndex={-1}
-          className="dropdown-content menu bg-base-100 rounded-box z-1 w-52 p-2 shadow-sm"
+          className="dropdown-content menu bg-base-100 rounded-box z-1 w-full sm:w-52 p-2 shadow-sm"
         >
           {categories.map((category) => (
             <li key={category.value}>
@@ -58,14 +58,14 @@ export default function ResourceFilter({ filters, onChange }) {
         </ul>
       </div>
 
-      <div className="dropdown dropdown-bottom">
-        <div tabIndex={0} role="button" className="btn m-1">
+      <div className="dropdown dropdown-bottom w-full sm:w-auto">
+        <div tabIndex={0} role="button" className="btn w-full">
           {availabilityLabel}
         </div>
 
         <ul
           tabIndex={-1}
-          className="dropdown-content menu bg-base-100 rounded-box z-1 w-52 p-2 shadow-sm"
+          className="dropdown-content menu bg-base-100 rounded-box z-1 w-full sm:w-52 p-2 shadow-sm"
         >
           {availabilityOptions.map((option) => (
             <li key={option.value}>

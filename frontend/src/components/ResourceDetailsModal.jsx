@@ -11,7 +11,7 @@ export default function ResourceDetailsModal({ resource, onClose }) {
 
   return (
     <div
-      className="modal modal-open"
+      className="modal modal-open modal-bottom sm:modal-middle"
       role="dialog"
       aria-modal="true"
       aria-labelledby="resource-modal-title"

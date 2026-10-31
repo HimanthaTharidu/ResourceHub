@@ -32,7 +32,7 @@ const userSchema = mongoose.Schema(
             required: [true, "Please specify a department"]
         },
     },
-    {timestams: true}
+    {timestamps: true}
 )
 userSchema.pre('save', async function(){
     if (!this.isModified("password")) return;
