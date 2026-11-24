@@ -38,11 +38,11 @@ jobs:
           cache-dependency-path: backend/package-lock.json
       - run: npm ci
 
-      # TC_AUTH_019 is left out until login rate limiting is added to the app
+      # the rate limit test is left out until login throttling is added to the app
       - name: Auth tests
         run: >
           npx vitest run tests/auth.test.js
-          -t "^(?!.*TC_AUTH_019)"
+          -t "^(?!.*throttles repeated failed login attempts)"
           --coverage --coverage.provider=v8
           --coverage.reporter=lcov --coverage.reporter=text
           --coverage.reportsDirectory=coverage/auth
