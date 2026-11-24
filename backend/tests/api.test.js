@@ -351,3 +351,56 @@ describe("Case 10: Approve, reject and review twice", () => {
     assert.equal(res.status, 403);
   });
 });
+
+
+describe("Case 11: Reservation date and time validation", () => {
+  it("rejects an invalid start date", async () => {
+    const body = booking(hallB, 10, 10, 12);
+    body.startTime = "invalid-date";
+
+    const res = await api("POST", "/reservations", {
+      cookie: facultyCookie,
+      body,
+    });
+
+    assert.equal(res.status, 400);
+    assert.ok(res.data.message);
+  });
+
+  it("rejects an invalid end date", async () => {
+    const body = booking(hallB, 10, 10, 12);
+    body.endTime = "invalid-date";
+
+    const res = await api("POST", "/reservations", {
+      cookie: facultyCookie,
+      body,
+    });
+
+    assert.equal(res.status, 400);
+    assert.ok(res.data.message);
+  });
+
+  it("rejects a reservation with a past start time", async () => {
+    const body = booking(hallB, -1, 10, 12);
+
+    const res = await api("POST", "/reservations", {
+      cookie: facultyCookie,
+      body,
+    });
+
+    assert.equal(res.status, 400);
+    assert.ok(res.data.message);
+  });
+
+  it("rejects equal start and end times", async () => {
+    const body = booking(hallB, 10, 10, 10);
+
+    const res = await api("POST", "/reservations", {
+      cookie: facultyCookie,
+      body,
+    });
+
+    assert.equal(res.status, 400);
+    assert.ok(res.data.message);
+  });
+});

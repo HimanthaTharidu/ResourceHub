@@ -4,7 +4,7 @@ import Resource from "../models/Resource.js";
 
 const conflictingStatuses = ["pending", "approved"];
 
-function parseReservationTimer(startValue, endValue) {
+export function parseReservationTimer(startValue, endValue) {
   const startTime = new Date(startValue);
   const endTime = new Date(endValue);
 
