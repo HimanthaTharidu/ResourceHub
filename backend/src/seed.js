@@ -4,6 +4,9 @@ import User from "./models/User.js";
 import Resource from "./models/Resource.js";
 import Reservation from "./models/Reservation.js";
 
+import dns from "node:dns";
+dns.setServers(["8.8.8.8", "1.1.1.1"]);
+
 dotenv.config();
 
 async function seed() {

@@ -7,7 +7,10 @@
     "dev": "nodemon src/server.js",
     "start": "node src/server.js",
     "seed": "node src/seed.js",
-    "test": "vitest"
+    "test": "npm run test:auth && npm run test:unit",
+    "test:auth": "vitest run tests/auth.test.js",
+    "test:unit": "node --test tests/resourceController.test.js tests/resourceTDD.test.js",
+    "test:bdd": "cucumber-js features/resource_management.feature"
   },
   "keywords": [],
   "author": "",
@@ -27,6 +30,10 @@
   },
   "devDependencies": {
     "supertest": "^7.3.2",
-    "vitest": "^5.1.1"
+    "vitest": "^5.1.1",
+    "@cucumber/cucumber": "^13.3.0",
+    "axios": "^1.21.1",
+    "axios-cookiejar-support": "^7.0.0",
+    "tough-cookie": "^6.1.0"
   }
 }

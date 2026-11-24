@@ -9,6 +9,7 @@ function SignupPage() {
     department: "",
     email: "",
     password: "",
+    confirmPassword: "",
   });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
@@ -134,6 +135,20 @@ function SignupPage() {
                   {passwordErrors}
                 </span>
               )}
+            </label>
+
+            <label className="form-control">
+              <span className="label"><span className="label-text">Confirm password</span></span>
+              <input
+                id="confirmPassword"
+                className="input input-bordered w-full mb-6"
+                name="confirmPassword"
+                type="password"
+                autoComplete="new-password"
+                value={form.confirmPassword}
+                onChange={handleChange}
+                required
+              />
             </label>
 
             {error && (
