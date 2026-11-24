@@ -51,7 +51,14 @@ export async function login_get(req, res) {
 }
 
 export async function signup_post(req, res) {
-  const { name, email, department,password } = req.body;
+  const { name, email, department, password, confirmPassword } = req.body;
+
+  if (confirmPassword !== undefined && password !== confirmPassword) {
+    return res.status(400).json({
+      email: "",
+      password: "Passwords do not match",
+    });
+  }
 
   try {
     const user = await User.create({
