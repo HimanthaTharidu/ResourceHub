@@ -22,7 +22,6 @@ const resourceSchema = new mongoose.Schema(
         message: "Please choose a valid resource category",
       },
     },
-    
 capacity: {
   type: Number,
   min: [1, "Capacity must be greater than zero"],
