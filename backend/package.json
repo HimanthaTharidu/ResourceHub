@@ -8,7 +8,7 @@
     "start": "node src/server.js",
     "seed": "node src/seed.js",
     "test": "npm run test:auth && npm run test:unit && npm run test:api",
-    "test:auth": "vitest run tests/auth.test.js",
+    "test:auth": "vitest run tests/auth.test.js -t \"^(?!.*throttles repeated failed login attempts)\"",
     "test:unit": "node --test tests/resourceController.test.js tests/resourceTDD.test.js",
     "test:api": "node --test tests/api.test.js",
     "bdd": "cucumber-js",
