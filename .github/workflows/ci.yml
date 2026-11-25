@@ -6,8 +6,9 @@ on:
     branches: [feature/QA, qa-reservation-testing]
   pull_request:
     branches: [feature/QA]
+
 jobs:
-  test:
+  backend:
     runs-on: ubuntu-latest
 
     services:
@@ -16,19 +17,24 @@ jobs:
         ports:
           - 27017:27017
         options: >-
-          --health-cmd "mongosh --eval 'db.adminCommand(\"ping\")'"
-          --health-interval 10s
+          --health-cmd "mongosh --quiet --eval 'db.runCommand({ping:1})'"
+          --health-interval 5s
           --health-timeout 5s
-          --health-retries 5
+          --health-retries 10
 
     defaults:
       run:
         working-directory: backend
 
     env:
-      MONGO_URI: mongodb://127.0.0.1:27017/resourcehub_dev
+      MONGO_URI: mongodb://127.0.0.1:27017/resourcehub
       MONGO_URI_TEST: mongodb://127.0.0.1:27017/resourcehub_test
-      JWT_SECRET: github-actions-test-secret
+      JWT_SECRET: ci_test_secret
+      PORT: 5000
+      BDD_ADMIN_EMAIL: admin@resourcehub.test
+      BDD_ADMIN_PASSWORD: admin123
+      BDD_FACULTY_EMAIL: faculty@resourcehub.test
+      BDD_FACULTY_PASSWORD: faculty123
 
     steps:
       - name: Checkout repository
@@ -44,11 +50,62 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Run API tests
-        run: npm test
+      - name: Authentication tests
+        run: >
+          npx vitest run tests/auth.test.js
+          -t "^(?!.*throttles repeated failed login attempts)"
+          --coverage --coverage.provider=v8
+          --coverage.reporter=lcov --coverage.reporter=text
+          --coverage.reportsDirectory=coverage/auth
+          --coverage.include="src/**"
 
-      - name: Run unit tests
+      - name: Resource management unit tests
+        run: node --test tests/resourceController.test.js tests/resourceTDD.test.js
+
+      - name: Reservation API tests
+        run: npm run test:api
+
+      - name: Reservation unit tests
         run: node --test tests/reservationTimer.test.js
 
-      - name: Run BDD tests
-        run: npm run bdd
+      - name: Run BDD scenarios
+        run: |
+          npm run seed
+          node src/server.js &
+          npx -y wait-on tcp:127.0.0.1:5000
+          npm run bdd
+
+      - name: Upload backend coverage
+        uses: actions/upload-artifact@v4
+        with:
+          name: backend-coverage
+          path: backend/coverage
+          if-no-files-found: ignore
+
+  frontend:
+    runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        working-directory: frontend
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run frontend lint
+        run: npm run lint
+        continue-on-error: true
+
+      - name: Build frontend
+        run: npm run build

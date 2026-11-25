@@ -22,21 +22,23 @@ const resourceSchema = new mongoose.Schema(
         message: "Please choose a valid resource category",
       },
     },
-    capacity: {
-      type: Number,
-      default: null,
-      required: [
-        function () {
-          return [
-            "lecture_hall",
-            "lecture_theatre",
-            "auditorium",
-            "computer_lab",
-          ].includes(this.category);
-        },
-        "Please add a capacity for this resource",
-      ],
+capacity: {
+  type: Number,
+  min: [1, "Capacity must be greater than zero"],
+  default: null,
+  required: [
+    function () {
+      return [
+        "lecture_hall",
+        "lecture_theatre",
+        "auditorium",
+        "computer_lab",
+      ].includes(this.category);
     },
+    "Please add a capacity for this resource",
+  ],
+},
+
     location: {
       type: String,
       required: [true, "Please specify a location"],

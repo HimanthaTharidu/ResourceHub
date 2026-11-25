@@ -118,7 +118,7 @@ New accounts created on the Sign up page are faculty members. To make an adminis
 
 ## Tests
 
-Automated API tests use Node's built-in test runner and a separate test database. Add this to `backend/.env`:
+Automated API tests use Vitest and a separate test database. Add this to `backend/.env`:
 
 ```
 MONGO_URI_TEST=mongodb+srv://<user>:<password>@<cluster>.jlpsmju.mongodb.net/?appName=<cluster>
