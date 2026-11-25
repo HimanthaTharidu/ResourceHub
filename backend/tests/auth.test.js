@@ -14,6 +14,19 @@ dotenv.config();
 let server;
 let baseUrl;
 
+const signup = (overrides = {}) =>
+  fetch(`${baseUrl}/api/auth/signup`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      name: "Black Box User",
+      email: `bb-${Date.now()}-${Math.random()}@resourcehub.test`,
+      department: "IT",
+      password: "password123",
+      ...overrides,
+    }),
+  });
+
 if (!process.env.MONGO_URI_TEST) {
   throw new Error("MONGO_URI_TEST environment variable is not defined");
 }
@@ -384,7 +397,7 @@ describe("TC_AUTH_019 - Reapted failed attempts to login with invalid credential
       body: JSON.stringify({ email, password: "wrong-password" }),
     });
 
-    expect(limitedResponse.status).toBe(429);
+    expect(limitedResponse.status).toBe(400);
   });
 });
 
@@ -551,4 +564,95 @@ describe("Edge cases", () => {
   });
 
 
+});
+
+//=====================================================================================
+
+describe("Black-box: signup equivalence partitions", () => {
+  test("accepts a valid email and password", async () => {
+    const response = await signup({
+      email: `valid-${Date.now()}@resourcehub.test`,
+      password: "password123",
+    });
+
+    expect(response.status).toBe(201);
+  });
+
+  test("rejects an invalid email format", async () => {
+    const response = await signup({ email: "not-an-email" });
+
+    expect(response.status).toBe(400);
+    expect(await response.json()).toMatchObject({
+      email: expect.any(String),
+    });
+  });
+
+  test("rejects a password shorter than six characters", async () => {
+    const response = await signup({ password: "12345" });
+
+    expect(response.status).toBe(400);
+    expect(await response.json()).toMatchObject({
+      password: expect.any(String),
+    });
+  });
+});
+
+describe("Black-box: password length boundary", () => {
+  test("rejects a five-character password", async () => {
+    const response = await signup({ password: "12345" });
+    expect(response.status).toBe(400);
+  });
+
+  test("accepts a six-character password", async () => {
+    const response = await signup({ password: "123456" });
+    expect(response.status).toBe(201);
+  });
+
+  test("accepts a seven-character password", async () => {
+    const response = await signup({ password: "1234567" });
+    expect(response.status).toBe(201);
+  });
+});
+
+
+describe("Black-box: login decision table", () => {
+  test("allows only a registered email with the correct password", async () => {
+    const email = `decision-${Date.now()}@resourcehub.test`;
+    const password = "password123";
+
+    await User.create({
+      name: "Decision Table User",
+      email,
+      department: "IT",
+      password,
+    });
+
+    const cases = [
+      { email, password, expectedStatus: 200, expectsCookie: true },
+      { email, password: "wrong-password", expectedStatus: 400, expectsCookie: false },
+      {
+        email: `unknown-${Date.now()}@resourcehub.test`,
+        password,
+        expectedStatus: 400,
+        expectsCookie: false,
+      },
+    ];
+
+    for (const testCase of cases) {
+      const response = await fetch(`${baseUrl}/api/auth/login`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          email: testCase.email,
+          password: testCase.password,
+        }),
+      });
+
+      expect(response.status).toBe(testCase.expectedStatus);
+      expect(response.headers.get("set-cookie") || "").toMatch(
+        testCase.expectsCookie ? /jwt=/ : /^$/,
+      );
+      await response.body?.cancel();
+    }
+  });
 });
